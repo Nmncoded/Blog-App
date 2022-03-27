@@ -14,7 +14,7 @@ class Articles extends React.Component {
         // console.log(activeTag);
         fetch(url.baseUrl)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             if(!res.ok){
                 throw new Error("check your Url")
             }else{
@@ -22,7 +22,7 @@ class Articles extends React.Component {
             }
         })
         .then(({articles}) => {
-            console.log(articles);
+            // console.log(articles);
             this.setState({articles:articles})
         })
         // .then(data => console.log(data.tags))
@@ -55,7 +55,8 @@ class Articles extends React.Component {
         return (
             <>
                 {
-                    articles.map((article,index) => {
+                    (articles.slice(0,10)).map((article,index) => {
+                        
                         return (
                             <li key={index} >
                                 
@@ -74,16 +75,16 @@ class Articles extends React.Component {
                                         </div>
                                     </div>
                                     <div className='person-name'>
-                                        <NavLink className='h3' to='/'>{article.slug}</NavLink>
-                                        <NavLink className='p' to='/'>{article.description}</NavLink>
+                                        <NavLink className='h3' to={`/articles/${article.slug}`} >{article.slug}</NavLink>
+                                        <NavLink className='p' to={`/articles/${article.slug}`} >{article.description}</NavLink>
                                     </div>
                                     <div className='read-more flex-between-center'>
-                                        <NavLink className='a' to='/' >Read more...</NavLink>
+                                        <NavLink className='a' to={`/articles/${article.slug}`} >Read more...</NavLink>
                                         <div className='flex-between-center'>
                                             {
                                                 article.tagList.map(p => {
                                                     return (
-                                                        <NavLink to='/' className='div' >{p}</NavLink>
+                                                        <NavLink to={`/articles/${article.slug}`} className='div' >{p}</NavLink>
                                                     )
                                                 })
                                             }

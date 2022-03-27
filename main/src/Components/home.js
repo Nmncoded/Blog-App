@@ -17,13 +17,18 @@ class Home extends React.Component {
             sampleTag:"",
             articles:null,
             allTags:null,
-            articlePerPage: 8,
+            articlePerPage: 10,
+            offSet: 0,
+            // error:{
+            articlErr:"",
+            tagErr:"",
+            // }
         };
     }
     componentDidMount(){
-        fetch(url.baseUrl)
+        fetch(url.baseUrl + (`?offset=${this.state.offSet}&limit=100`))
         .then(res => {
-            console.log(res)
+            // console.log(res)
             if(!res.ok){
                 throw new Error("check your Url")
             }else{
@@ -31,15 +36,20 @@ class Home extends React.Component {
             }
         })
         .then(({articles}) => {
-            // console.log(articles);
+            console.log(articles);
             this.setState({articles:articles})
         })
         // .then(data => console.log(data.tags))
-        .catch(console.error)
+        .catch(err => {
+            
+            // console.log(err);
+            
+            this.setState({articlErr:err})
+        })
 
         fetch(url.tagsUrl)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             if(!res.ok){
                 throw new Error("check your Url")
             }else{
@@ -47,11 +57,22 @@ class Home extends React.Component {
             }
         })
         .then(({tags}) => {
-            this.setState({allTags:tags})
+            let arr = tags.reduce((acc,cv) => {
+                if(!acc.includes(cv)){
+                    acc.push(cv);
+                }
+                return acc;
+            },[])
+            this.setState({allTags:arr})
         })
-        .catch(console.error)
+        .catch(err => {
+            // const error = this.state.error;
+            // console.log(err);
+            // error.tagErr = err;
+            this.setState({tagErr:err})
+        })
     }
-    handleClick = (name,value) => {
+    handleClick = (name,value,num) => {
         console.log(name)
         if(value === "tags"){
             this.setState((prev) => {
@@ -71,13 +92,37 @@ class Home extends React.Component {
                 }
             })
         }
+        if(value === "prev"){
+            this.setState((prev) => {
+                return {
+                    sampleTag: value,
+                    offSet: this.state.offSet - this.state.articlePerPage > 1 ? this.state.offSet - this.state.articlePerPage : 0,
+                }
+            })
+        }
+        if(value === "next"){
+            this.setState((prev) => {
+                return {
+                    sampleTag: value,
+                    offSet: this.state.offSet + this.state.articlePerPage <= this.state.articles.length ? this.state.offSet + 10 : this.state.offSet,
+                }
+            })
+        }
+        if(num === "num"){
+            this.setState((prev) => {
+                return {
+                    sampleTag: num,
+                    offSet: (value * this.state.articlePerPage) - this.state.articlePerPage <= this.state.articles.length ? (value * this.state.articlePerPage) - this.state.articlePerPage : this.state.offSet,
+                }
+            })
+        }
     }
     componentDidUpdate(){
         const {activeTag,sampleTag} = this.state;
         if(!sampleTag)return;
         // console.log("update articles")
         console.log(activeTag);
-        fetch(activeTag ? url.baseUrl + (`?tag=${activeTag}`) : url.baseUrl)
+        fetch(activeTag ? url.baseUrl + (`?tag=${activeTag}&offset=${this.state.offSet}`) : url.baseUrl + (`?offset=${this.state.offSet}&limit=100`))
         .then(res => {
             console.log(res)
             if(!res.ok){
@@ -95,20 +140,22 @@ class Home extends React.Component {
         .catch(console.error)
     }
     getPagination = (articles,articlePerPage) => {
-        let arr = []
-        for(let i =1; i<= Math.ceil(articles.length/articlePerPage);i++){
-            arr.push(<li className='button-shrink' key={i} >{i}</li>)
+        let arr = [];
+        for(let i =1; i<= Math.ceil(articles.length/articlePerPage) + 1;i++){
+            arr.push(<li onClick={() => this.handleClick("",i,"num")}  className={(i - 1)*this.state.articlePerPage  === this.state.offSet ? 'button-shrink activ-bg-color' : 'button-shrink'} key={i} >{i}</li>)
         }
         return arr;
     }
     render(){
         const {articles,allTags,activeTag,articlePerPage} = this.state;
+        const {articlErr,tagErr} = this.state;
         console.log(articles);
         return (
                 <>
                     <Hero />
                     <article className='feeds-main container'>
                         <section className='feeds-tags'>
+                            <div className='feeds-pagination' >
                             <ul className='feeds'>
                                 <section>
                                     {
@@ -117,7 +164,7 @@ class Home extends React.Component {
                                             <div onClick={() =>  this.handleClick("","feeds")} className={activeTag ? 'global-feeds' : 'global-feeds border-bottom'}>
                                                 <NavLink activeClassName='active' className='nav-link' to='/' exact >Global Feed</NavLink>
                                             </div>
-                                            <span onClick={() =>  this.handleClick("","tags")} className={activeTag ? 'global-feeds border-bottom' : 'global-feeds'}>
+                                            <span onClick={() =>  this.handleClick(activeTag,"tags")} className={activeTag ? 'global-feeds border-bottom' : 'global-feeds'}>
                                                 <NavLink activeClassName='active' className='nav-link' to='/' exact >#{activeTag}</NavLink>
                                             </span>
                                         </> : 
@@ -127,20 +174,21 @@ class Home extends React.Component {
                                     }
                                 </section>
                             {
-                                (!articles) ? <Loader /> : 
+                                (articlErr) ? 
+                                <>  
+                                    <p className='err-msg' >Not able to fetch articles !!!</p>
+                                    <Loader />
+                                </>
+                                :
+                                (!articles) ? 
+                                <Loader />
+                                : 
                             <Articles activeTag={this.state.activeTag} articles={articles} />
                             }
+                            
                             </ul>
-                            <div className='tags'>
-                                <h4>Popular Tags</h4>
-                                {
-                                    (!allTags) ? <Loader /> :
-                                <Tags handleClick={(name) =>  this.handleClick(name,"tags")} activeTag={activeTag} allTags={allTags} />
-                                }
-                            </div>
-                        </section>
-                        <section className='pagination flex-center-center'>
-                            <button className=' font-size button-shrink'>Prev</button>
+                            <section className='pagination flex-center-center'>
+                            <button onClick={() => this.handleClick("","prev")} className=' font-size button-swing'>Prev</button>
                             <ul className='flex-center-center' >
                             {
                                 articles ? 
@@ -149,8 +197,27 @@ class Home extends React.Component {
                                 ""
                             }
                             </ul>
-                            <button className=' font-size button-swing'>Next</button>
+                            <button  onClick={() => this.handleClick("","next")}  className=' font-size button-swing'>Next</button>
+                            </section>
+                            </div>
+                            
+                            <div className='tags'>
+                                <h4 className='button-shrink' >Popular Tags</h4>
+                                {
+                                    (tagErr) ? 
+                                    <>
+                                        <p className='err-msg' >Not able to fetch tags !!!</p>
+                                        <Loader />
+                                    </>
+                                    :
+                                    (!allTags) ? 
+                                        <Loader />
+                                    :
+                                <Tags handleClick={(name) =>  this.handleClick(name,"tags")} activeTag={activeTag} allTags={allTags} />
+                                }
+                            </div>
                         </section>
+                        
                     </article>
                 </>
         )

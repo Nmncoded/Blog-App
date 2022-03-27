@@ -1,0 +1,129 @@
+/* button animation */
+
+.button-shrink {
+    color: #65b5f6;
+    background-color: transparent;
+    border: 1px solid #65b5f6;
+    border-radius: 4px;
+    padding: 0 16px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .button-shrink:hover {
+    transform: scale(0.8);
+  }
+  
+  .button-swing {
+    color: #65b5f6;
+    background-color: transparent;
+    border: 1px solid #65b5f6;
+    border-radius: 4px;
+    padding: 0 16px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .button-swing:focus {
+    animation: swing 1s ease;
+    animation-iteration-count: 1;
+  }
+  
+  @keyframes swing {
+    15% {
+      transform: translateX(5px);
+    }
+    30% {
+      transform: translateX(-5px);
+    }
+    50% {
+      transform: translateX(3px);
+    }
+    65% {
+      transform: translateX(-3px);
+    }
+    80% {
+      transform: translateX(2px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  
+  .flex-center-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .flex-between-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .flex-evenly-center {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  /* custom styles */
+
+  .main-signin {
+      margin: 24px;
+      flex-direction: column;
+      h2 {
+          font-size: 48px;
+          color: rgba(black,0.7);
+          font-weight: 400;
+          margin: 16px 0;
+      }
+      p {
+          margin-bottom: 20px;
+      }
+      form {
+          flex-direction: column;
+          width: 40%;
+      }
+      @media screen and (max-width:768px) {
+          form {
+              width: 70%;
+          }
+      }
+      
+  }
+  .nav-link {
+      color: rgba(#5cb85c, 0.8);
+      font-size: 18px;
+      font-weight: 350;
+      &:hover {
+          font-weight: 400;
+          text-decoration: underline 2px solid rgba(#5cb85c, 1);
+          color: rgba(#5cb85c, 1);
+      }
+  }
+
+.email, .password {
+    padding: 16px;
+    outline: 0;
+    font-size: 18px;
+    color: #5cb85c;
+    margin: 8px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(#5cb85c, 1);
+    font-weight: 400;
+}
+.errs {
+    color: red;
+}
+.submit-btn {
+    background-color: rgba(#5cb85c, 0.1);
+    margin: 8px;
+    font-size: 16px;
+    padding: 10px 24px !important;  
+    align-self: flex-end;
+}

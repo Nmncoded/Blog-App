@@ -32,7 +32,7 @@ class Tags extends React.Component {
                 {
                     (allTags.filter(tag => tag !== "")).map((tag,index) => {
                         return (
-                            <li className={tag === activeTag ? "active-tag" : ""} onClick={() => this.props.handleClick(tag)} key={index} >{tag}</li>
+                            <li className={tag === activeTag ? 'button-shrink active-tag' : "button-shrink"} onClick={() => this.props.handleClick(tag)} key={index} >{tag}</li>
                         )
                     })
                 }
