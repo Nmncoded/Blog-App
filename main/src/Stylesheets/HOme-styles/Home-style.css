@@ -130,26 +130,35 @@
 }
 
 /* custom styles */
-.feeds-main {
-  padding: 0 36px;
-}
-
 .feeds-tags {
+  margin: 0 16px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
+  margin-bottom: 24px;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  justify-items: space-between;
 }
 
 .feeds {
   width: 69%;
+  margin-right: 16px;
 }
 
-.feeds h2 {
+.feeds section {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
@@ -166,7 +175,6 @@
 }
 
 .border-bottom {
-  width: 12%;
   border-bottom: 3px solid #5cb85c !important;
 }
 
@@ -277,6 +285,11 @@
   font-weight: 400;
 }
 
+.read-more {
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
 .read-more .a {
   text-decoration: none;
   color: rgba(0, 0, 0, 0.4);
@@ -324,8 +337,47 @@
   background-color: #818a91;
   padding: 8px;
   border-radius: 16px;
+  cursor: pointer;
   color: white;
   font-size: 14px;
   margin: 4px;
+}
+
+.all-tags li:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.all-tags .active-tag {
+  color: #5cb85c;
+  background-color: rgba(0, 0, 0, 0.9);
+  -webkit-text-decoration: underline 2px solid black;
+          text-decoration: underline 2px solid black;
+}
+
+.all-tags .active-tag:hover {
+  background-color: #818a91 !important;
+}
+
+/* pagination */
+.pagination {
+  margin: 0 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.pagination .font-size {
+  font-size: 18px;
+  padding: 4px 16px;
+}
+
+.pagination ul li {
+  padding: 8px 16px;
+  margin: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
 }
 /*# sourceMappingURL=Home-style.css.map */

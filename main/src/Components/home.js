@@ -1,22 +1,29 @@
 import React from 'react'; 
-// import '../hero-styles/hero.css';
 import {Link,NavLink} from 'react-router-dom';
-import '../Stylesheets/HOme-styles/Home-style.css'; 
-import Hero from './hero.js'
 import url from './URL';
+import '../Stylesheets/HOme-styles/Home-style.css'; 
+import Hero from './hero.js';
+import Articles from './Articles';
+import Tags from './Tags.js';
+import Loader from './loader';
+
 
 
 class Home extends React.Component {
     constructor(props){
         super(props);
         this.state = {
+            activeTag: "",
+            sampleTag:"",
             articles:null,
+            allTags:null,
+            articlePerPage: 8,
         };
     }
     componentDidMount(){
         fetch(url.baseUrl)
         .then(res => {
-            // console.log(res)
+            console.log(res)
             if(!res.ok){
                 throw new Error("check your Url")
             }else{
@@ -27,16 +34,75 @@ class Home extends React.Component {
             // console.log(articles);
             this.setState({articles:articles})
         })
+        // .then(data => console.log(data.tags))
+        .catch(console.error)
+
+        fetch(url.tagsUrl)
+        .then(res => {
+            console.log(res)
+            if(!res.ok){
+                throw new Error("check your Url")
+            }else{
+                return res.json()
+            }
+        })
+        .then(({tags}) => {
+            this.setState({allTags:tags})
+        })
         .catch(console.error)
     }
-    render(){
-        const {articles} = this.state;
-        if(!this.state.articles){
-            return <>
-                <Hero />
-                <Loader />
-            </>
+    handleClick = (name,value) => {
+        console.log(name)
+        if(value === "tags"){
+            this.setState((prev) => {
+                return {
+                    activeTag : name,
+                    sampleTag:name,
+                    articles:null,
+                }
+            })
         }
+        if(value === "feeds"){
+            this.setState((prev) => {
+                return {
+                    activeTag : "",
+                    sampleTag: value,
+                    articles:null,
+                }
+            })
+        }
+    }
+    componentDidUpdate(){
+        const {activeTag,sampleTag} = this.state;
+        if(!sampleTag)return;
+        // console.log("update articles")
+        console.log(activeTag);
+        fetch(activeTag ? url.baseUrl + (`?tag=${activeTag}`) : url.baseUrl)
+        .then(res => {
+            console.log(res)
+            if(!res.ok){
+                throw new Error("check your Url")
+            }else{
+                return res.json()
+            }
+        })
+        .then(({articles}) => {
+            this.setState({
+                articles:articles,
+                sampleTag:"",
+            })
+        })
+        .catch(console.error)
+    }
+    getPagination = (articles,articlePerPage) => {
+        let arr = []
+        for(let i =1; i<= Math.ceil(articles.length/articlePerPage);i++){
+            arr.push(<li className='button-shrink' key={i} >{i}</li>)
+        }
+        return arr;
+    }
+    render(){
+        const {articles,allTags,activeTag,articlePerPage} = this.state;
         console.log(articles);
         return (
                 <>
@@ -44,66 +110,46 @@ class Home extends React.Component {
                     <article className='feeds-main container'>
                         <section className='feeds-tags'>
                             <ul className='feeds'>
-                                <h2>
-                                    <div className='global-feeds border-bottom'>
-                                        <NavLink activeClassName='active' className='nav-link' to='/' exact >Global Feed</NavLink>
-                                    </div>
-                                </h2>
-                            {
-                                articles.map((article,index) => {
-                                    return (
-                                        <li key={index} >
-                                            
-                                            <div className='article'>
-                                                <div className='personal-info flex-between-center'>
-                                                    <div className='person'>
-                                                        <img src={article.author.image} alt={article.author.username}/>
-                                                        <div className='name-date'>
-                                                            <span className='name'>{article.author.username}</span>
-                                                            <span className='date'>{(article.updatedAt.split("T"))[0]}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div className='likes flex-between-center'>
-                                                        <span className='dill'>♥</span>
-                                                        <span>{article.favoritesCount}</span>
-                                                    </div>
-                                                </div>
-                                                <div className='person-name'>
-                                                    <NavLink className='h3' to='/'>{article.slug}</NavLink>
-                                                    <NavLink className='p' to='/'>{article.description}</NavLink>
-                                                </div>
-                                                <div className='read-more flex-between-center'>
-                                                    <NavLink className='a' to='/' >Read more...</NavLink>
-                                                    <div>
-                                                        {
-                                                            article.tagList.map(p => {
-                                                                return (
-                                                                    <NavLink to='/' className='div' >{p}</NavLink>
-                                                                )
-                                                            })
-                                                        }
-                                                    </div>
-                                                </div>
+                                <section>
+                                    {
+                                        activeTag ? 
+                                        <>
+                                            <div onClick={() =>  this.handleClick("","feeds")} className={activeTag ? 'global-feeds' : 'global-feeds border-bottom'}>
+                                                <NavLink activeClassName='active' className='nav-link' to='/' exact >Global Feed</NavLink>
                                             </div>
-                                        </li>
-                                    )
-                                })
+                                            <span onClick={() =>  this.handleClick("","tags")} className={activeTag ? 'global-feeds border-bottom' : 'global-feeds'}>
+                                                <NavLink activeClassName='active' className='nav-link' to='/' exact >#{activeTag}</NavLink>
+                                            </span>
+                                        </> : 
+                                        <div onClick={() =>  this.handleClick("","feeds")} className='global-feeds border-bottom'>
+                                            <NavLink activeClassName='active' className='nav-link' to='/' exact >Global Feed</NavLink>
+                                        </div>
+                                    }
+                                </section>
+                            {
+                                (!articles) ? <Loader /> : 
+                            <Articles activeTag={this.state.activeTag} articles={articles} />
                             }
                             </ul>
                             <div className='tags'>
                                 <h4>Popular Tags</h4>
-                                <ul className='all-tags'>
-                                    {
-                                        articles.map((article,index) => {
-                                            return article.tagList.map(p => {
-                                                return (
-                                                    <li>{p}</li>
-                                                )
-                                            })
-                                        })
-                                    }
-                                </ul>
+                                {
+                                    (!allTags) ? <Loader /> :
+                                <Tags handleClick={(name) =>  this.handleClick(name,"tags")} activeTag={activeTag} allTags={allTags} />
+                                }
                             </div>
+                        </section>
+                        <section className='pagination flex-center-center'>
+                            <button className=' font-size button-shrink'>Prev</button>
+                            <ul className='flex-center-center' >
+                            {
+                                articles ? 
+                                this.getPagination(articles,articlePerPage)
+                                : 
+                                ""
+                            }
+                            </ul>
+                            <button className=' font-size button-swing'>Next</button>
                         </section>
                     </article>
                 </>
@@ -111,15 +157,5 @@ class Home extends React.Component {
     }
 }
 
-
-function Loader(){
-    return (
-        <div className="bouncing-loader">
-            <div></div>
-            <div></div>
-            <div></div>
-        </div>
-    )
-}
 
 export default Home;
