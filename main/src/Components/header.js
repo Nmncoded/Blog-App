@@ -8,21 +8,42 @@ class Header extends React.Component {
         this.state = {};
     }
     render(){
+        let {isLoggedin,user} = this.props;
         return (
             <header className='container'>
                 <section className='header flex-between-center' >
                 <div>
                     <NavLink to='/'  className='logo' >Conduit</NavLink>
                 </div>
-                <div >
-                    <NavLink activeClassName='nav-active' className='nav-links' to='/' exact >Home</NavLink>
-                    <NavLink  activeClassName='nav-active'  className='nav-links' to='/signup' >Sign up</NavLink>
-                    <NavLink  activeClassName='nav-active'  className='nav-links' to='/signin' >Sign In</NavLink>
-                </div>
+                {
+                    isLoggedin ?
+                    <AuthorisedUser isLoggedin={isLoggedin} /> : 
+                    <NoAuthorisedUser />
+                }
                 </section>
             </header>
         )
     }
+}
+
+function AuthorisedUser(props){
+    return(
+        <div >
+            <NavLink activeClassName='nav-active' className='nav-links' to='/' exact >Home</NavLink>
+            <NavLink  activeClassName='nav-active'  className='nav-links' to='/newpost' >New Article</NavLink>
+            <NavLink  activeClassName='nav-active'  className='nav-links' to='/settings' >Settings</NavLink>
+            <NavLink  activeClassName='nav-active'  className='nav-links' to='/profile' >Profile</NavLink>
+        </div>
+    )
+}
+function NoAuthorisedUser(props){
+    return(
+        <div >
+            <NavLink activeClassName='nav-active' className='nav-links' to='/' exact >Home</NavLink>
+            <NavLink  activeClassName='nav-active'  className='nav-links' to='/signup' >Sign up</NavLink>
+            <NavLink  activeClassName='nav-active'  className='nav-links' to='/signin' >Sign In</NavLink>
+        </div>
+    )
 }
 
 export default Header;

@@ -1,6 +1,8 @@
 import React from 'react'; 
 import '../Stylesheets/signup-styles/signup.css';
 import {Link,NavLink} from 'react-router-dom';
+import url from './URL'
+import { withRouter } from 'react-router-dom';
 
 class Signup extends React.Component {
     constructor(props){
@@ -45,8 +47,35 @@ class Signup extends React.Component {
         })
     }
     handleInputSubmit = (event) => {
+        let {username,email,password} = this.state;
         event.preventDefault();
-        alert(this.state.email + this.state.password + this.state.username);
+        fetch(url.signUpUrl,{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user:{
+                username,
+                email,
+                password,
+                }
+            })
+        }).then(res => {
+            if(!res.ok){
+                return res.json().then(({errors}) => {
+                    return Promise.reject(errors);
+                });
+            }else{
+                return res.json()
+            }
+        })
+        .then(({user}) => {
+            this.props.updateUser(user);
+            this.props.history.push('/');
+            this.setState({username:"",email:"",password:""})
+        })
+        .catch(errors => this.setState({errors}))
     }
     render(){
         let errors = this.state.errors;
@@ -71,4 +100,4 @@ class Signup extends React.Component {
     }
 }
 
-export default Signup;
+export default withRouter(Signup);

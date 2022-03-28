@@ -1,7 +1,7 @@
 import React from 'react'; 
 import url from './URL';
 import '../Stylesheets/single-styles/singlestyle.css';
-import {Link,NavLink} from 'react-router-dom';
+import {Link,NavLink,withRouter} from 'react-router-dom';
 import Loader from './loader';
 
 class SingleArticle extends React.Component {
@@ -68,12 +68,16 @@ class SingleArticle extends React.Component {
                         </div>
                         <div className='container' >
                             <section className='comments-section flex-center-center'>
-                                <h6>
+                                {
+                                    !this.props.user ? 
+                                    <h6>
                                     <NavLink className='nav-link' to='/signin' >Signin</NavLink>
                                     or 
                                     <NavLink className='nav-link' to='/signup'  >Signup</NavLink>
                                     to add comments on this article.
-                                </h6>
+                                    </h6> : 
+                                    ""
+                                }
                                 <div className='profile'>
                                     <p className='comments-text'>hello World</p>
                                     <div className='margin-bottom person'>
@@ -95,4 +99,4 @@ class SingleArticle extends React.Component {
 
 
 
-export default SingleArticle;
+export default withRouter(SingleArticle);

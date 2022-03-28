@@ -1,6 +1,8 @@
 import React from 'react'; 
 import '../Stylesheets/signin-styles/signin.css';
 import {Link,NavLink} from 'react-router-dom';
+import url from './URL';
+import { withRouter } from 'react-router-dom';
 
 class Signin extends React.Component {
     constructor(props){
@@ -42,7 +44,42 @@ class Signin extends React.Component {
     }
     handleInputSubmit = (event) => {
         event.preventDefault();
-        alert(this.state.email + this.state.password);
+        let {email,password} = this.state;
+        fetch(url.signInUrl,{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user:{
+                email,
+                password,
+                }
+            })
+        }).then(res => {
+            if(!res.ok){
+                res.json().then(({errors}) => {
+                    return Promise.reject(errors)
+                })
+            }else{
+                return res.json()
+            }
+        })
+        .then(({user}) => {
+            this.props.updateUser(user);
+            this.props.history.push('/');
+        })
+        .catch(errors => {
+            this.setState((prev) => {
+                return {
+                    ...prev,
+                    errors:{
+                        ...prev.errors,
+                        email:"email or password is invalid",
+                    }
+                }
+            })
+        })
     }
     render(){
         let errors = this.state.errors;
@@ -65,4 +102,4 @@ class Signin extends React.Component {
     }
 }
 
-export default Signin;
+export default withRouter(Signin);

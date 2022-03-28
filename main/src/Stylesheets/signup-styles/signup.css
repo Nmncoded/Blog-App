@@ -154,7 +154,7 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  width: 40%;
+  width: 50%;
 }
 
 @media screen and (max-width: 768px) {
@@ -176,13 +176,15 @@
   color: #5cb85c;
 }
 
-.email, .password, .username {
+.email,
+.password,
+.username {
   padding: 16px;
   outline: 0;
   font-size: 18px;
   color: #5cb85c;
   margin: 8px;
-  width: 100%;
+  width: 80%;
   border-radius: 10px;
   border: 1px solid #5cb85c;
   font-weight: 400;
@@ -194,10 +196,8 @@
 
 .submit-btn {
   background-color: rgba(92, 184, 92, 0.1);
-  margin: 8px;
+  margin: 8px auto !important;
   font-size: 16px;
-  padding: 10px 24px  !important;
-  -ms-flex-item-align: end;
-      align-self: flex-end;
+  padding: 10px 24px !important;
 }
 /*# sourceMappingURL=signup.css.map */
