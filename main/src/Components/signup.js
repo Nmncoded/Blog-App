@@ -71,9 +71,12 @@ class Signup extends React.Component {
             }
         })
         .then(({user}) => {
-            this.props.updateUser(user);
+            this.props.updateUser({
+                ...user,
+                password,
+            });
             this.props.history.push('/');
-            this.setState({username:"",email:"",password:""})
+            // this.setState({username:"",email:"",password:""})
         })
         .catch(errors => this.setState({errors}))
     }

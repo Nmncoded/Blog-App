@@ -173,6 +173,7 @@
 
 .global-feeds {
   padding: 16px;
+  cursor: pointer;
 }
 
 .active {
@@ -236,7 +237,7 @@
 }
 
 .name-date .date {
-  color: rgba(0, 0, 0, 0.3);
+  color: rgba(0, 0, 0, 0.3) !important;
   font-size: 13px;
 }
 
@@ -406,5 +407,12 @@
   color: red;
   font-size: 18px;
   margin: 16px;
+}
+
+/* padding margin */
+.padding-margin {
+  padding: 4px 16px !important;
+  margin: 8px;
+  text-decoration: none;
 }
 /*# sourceMappingURL=Home-style.css.map */

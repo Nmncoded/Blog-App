@@ -165,7 +165,6 @@
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 0 36px 36px 36px;
 }
 
 .person img {
@@ -198,9 +197,16 @@
           text-decoration: underline 2px solid #5cb85c;
 }
 
+.name-date .clr-white {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
 .name-date .date {
-  color: rgba(255, 255, 255, 0.7);
   font-size: 13px;
+}
+
+.apdding {
+  padding: 0 36px 36px 36px !important;
 }
 
 .main-single-article article p {

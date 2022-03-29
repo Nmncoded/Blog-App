@@ -11,6 +11,7 @@ import SingleArticle from './Components/singleArticle';
 import url from './Components/URL';
 import Loader from './Components/loader';
 import NewPost from './Components/newpost';
+import UpdatePost from './Components/updatepost';
 import Profile from './Components/profile'
 import Settings from   './Components/settings'
 
@@ -26,6 +27,7 @@ class App extends React.Component {
     }
     
     componentDidMount(){
+        
         let key = localStorage[url.localStorageKey];
         let {userVerifyURL} = url;
         if(key){
@@ -44,6 +46,7 @@ class App extends React.Component {
                 }
             })
             .then(({user}) => {
+                
                 this.updateUser(user);
             })
             .catch(errors => console.log(errors))
@@ -55,17 +58,22 @@ class App extends React.Component {
         this.setState({isLoggedin:true,user,isVerifying:false});
         localStorage.setItem( url.localStorageKey, user.token);
     }
-    
+    handleLogout = () => {
+        console.log("logout")
+        localStorage.clear();
+        this.setState({isLoggedin:false})
+    }
     render(){
         if(this.state.isVerifying){
             return <Loader />
         }
+        console.log(this.state.user)
         return (
             <BrowserRouter>
                 <Header isLoggedin={this.state.isLoggedin} user={this.state.user} />
                 {
                     this.state.isLoggedin ?
-                    <AuthenticatedApp user={this.state.user} updateUser={this.updateUser} /> : 
+                    <AuthenticatedApp user={this.state.user} handleLogout={this.handleLogout} updateUser={this.updateUser} /> : 
                     <UnAuthenticatedApp user={this.state.user} updateUser={this.updateUser}/>
                 }
             </BrowserRouter>
@@ -82,11 +90,14 @@ function AuthenticatedApp(props){
             <Route path='/newpost'  exact >
                 <NewPost user={props.user} />
             </Route>
-            <Route path='/profile'  user={props.user}  exact >
-                <Profile />
+            <Route path='/updatepost/:slug'  exact >
+                <UpdatePost user={props.user} />
             </Route>
-            <Route path='/settings'  user={props.user}  updateUser={props.updateUser}   exact >
-                <Settings />
+            <Route path='/profile' exact >
+                <Profile  user={props.user}  />
+            </Route>
+            <Route path='/settings'   updateUser={props.updateUser}   exact >
+                <Settings  user={props.user} handleLogout={props.handleLogout} />
             </Route>
             <Route path='/articles/:slug' >
                 <SingleArticle user={props.user} />

@@ -1,12 +1,14 @@
 import React from 'react'; 
-import {Link,NavLink} from 'react-router-dom';
+import {Link,NavLink,withRouter} from 'react-router-dom';
 import url from './URL';
 
 class Articles extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            // articles:null,
+            error:{
+                message:"",
+            }
         }
     }
     componentDidMount(){
@@ -28,26 +30,41 @@ class Articles extends React.Component {
         // .then(data => console.log(data.tags))
         .catch(console.error)
     }
-    /* componentDidUpdate(){
-        // console.log("update articles")
-        const {activeTag} = this.props;
-        console.log(activeTag);
-        fetch(url.baseUrl + (activeTag ? `?tag=${activeTag}`:""))
-        .then(res => {
-            console.log(res)
+    handleDlte = (slug) => {
+        let token = this.props.token;
+        fetch(url.baseUrl + "/" + slug,{
+            method: 'DELETE',
+            headers:{
+                'Content-Type': 'application/json',
+                authorization : `Token ${token}`
+            }
+        }).then(res => {
             if(!res.ok){
-                throw new Error("check your Url")
+                return res.json().then(({errors}) => {
+                    // console.log(data);
+                    return Promise.reject("Check your fetch url, article not updated !!!")
+                })
             }else{
                 return res.json()
             }
         })
-        .then(({articles}) => {
-            console.log(articles);
-            this.setState({articles:articles})
+        .then((user) => {
+            console.log(user);
+            
         })
-        // .then(data => console.log(data.tags))
-        .catch(console.error)
-    } */
+        .catch(message => {
+            // console.log(errors);
+            this.setState((prev) => {
+                return {
+                    
+                    errors:{
+                        ...prev.errors,
+                        message,
+                    }
+                }
+            })
+        })
+    }
     render(){
         const {articles} = this.props;
         // this.getData();
@@ -90,6 +107,19 @@ class Articles extends React.Component {
                                             }
                                         </div>
                                     </div>
+                                    {
+                                        this.props.update ? 
+                                        <>
+                                            <button className='button-shrink padding-margin'>
+                                                <NavLink  style={{textDecoration:"none",color:"light-blue",fontSize:"16px"}} to={`/updatepost/${article.slug}`} >Edit</NavLink>
+                                            </button>
+                                            <button className='button-shrink padding-margin'>
+                                            <NavLink to='/' onClick={() => this.handleDlte(article.slug)} style={{textDecoration:"none",color:"light-blue",fontSize:"16px"}} >Delete</NavLink>
+                                            </button>
+                                        </>
+                                        :
+                                        ""
+                                    }
                                 </div>
                             </li>
                         )

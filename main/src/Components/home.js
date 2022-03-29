@@ -1,9 +1,9 @@
 import React from 'react'; 
 import {Link,NavLink} from 'react-router-dom';
 import url from './URL';
-import '../Stylesheets/HOme-styles/Home-style.css'; 
-import Hero from './hero.js';
 import Articles from './Articles';
+import Hero from './hero.js';
+import '../Stylesheets/HOme-styles/Home-style.css'; 
 import Tags from './Tags.js';
 import Loader from './loader';
 
@@ -14,15 +14,13 @@ class Home extends React.Component {
         super(props);
         this.state = {
             activeTag: "",
-            sampleTag:"",
             articles:null,
             allTags:null,
+            sampleTag:"",
             articlePerPage: 10,
             offSet: 0,
-            // error:{
             articlErr:"",
             tagErr:"",
-            // }
         };
     }
     componentDidMount(){
@@ -36,7 +34,7 @@ class Home extends React.Component {
             }
         })
         .then(({articles}) => {
-            console.log(articles);
+            // console.log(articles);
             this.setState({articles:articles})
         })
         // .then(data => console.log(data.tags))
@@ -121,7 +119,7 @@ class Home extends React.Component {
         const {activeTag,sampleTag} = this.state;
         if(!sampleTag)return;
         // console.log("update articles")
-        console.log(activeTag);
+        // console.log(activeTag);
         fetch(activeTag ? url.baseUrl + (`?tag=${activeTag}&offset=${this.state.offSet}`) : url.baseUrl + (`?offset=${this.state.offSet}&limit=100`))
         .then(res => {
             console.log(res)

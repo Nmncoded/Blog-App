@@ -53,7 +53,7 @@ class NewPost extends React.Component {
         })
         .then((user) => {
             // console.log(user);
-            // this.props.history.push('/');
+            this.props.history.push('/');
         })
         .catch(message => {
             // console.log(errors);
@@ -79,7 +79,7 @@ class NewPost extends React.Component {
                     <input type='text'  className='password' value={description}  onChange={this.handleInputChange} name="description" placeholder={`What's this article about?`}/>
                     <textarea rows={10} className='email' value={body} onChange={this.handleInputChange} name='body' placeholder='write your article (in markdown format)' ></textarea>
                     <input type='text'  className='password' value={tags}  onChange={this.handleInputChange} name="tags" placeholder="Enter tags" />
-                    <input type='submit'  className='button-swing submit-btn'  value='Post Article' />
+                    <input type='submit' disabled={!title || !description || !body || !tags} className='button-swing submit-btn'  value={!title || !description || !body || !tags ? "No field should be empty" : "Post Article(Click me!)"} />
                 </form>
             </section>
         )

@@ -71,3 +71,51 @@
   }
   
   /* custom styles */
+
+.profile-hero-section {
+  background-color: rgba(black,0.1  );
+}
+.profile-hero {
+  display: flex;
+  justify-content: center;
+  padding: 36px;
+  align-items: center;
+  flex-direction: column;
+  .img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+    img {
+      border: 1px solid rgba(black,0.7);
+      width: 90%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+  h2 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 22px;
+  }
+  p {
+    font-weight: 300;
+    color: rgba(black,0.4 );
+    margin-bottom: 16px;
+    text-align: center;
+    line-height: 1.6;
+    font-size: 22px;
+  }
+  .profile-settings {
+    margin: 16px 0;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(black,0.1  );
+  }
+}
+
+
+/* feeds section */
+.padding {
+  padding: 36px;
+  width: 80%;
+}

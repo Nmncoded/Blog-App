@@ -1,17 +1,17 @@
 import React from 'react';
 import url from './URL';
 import '../Stylesheets/settings-styles/settings.css';
-import {withRouter} from 'react-router-dom';
+import {withRouter,NavLink} from 'react-router-dom';
 
 class Settings extends React.Component {
     constructor(props){
         super(props);
         this.state={
             imageUrl:"",
-            username:"",
-            email:"",
-            password:"",
-            bio:"",
+            username:this.props.user.username,
+            email:this.props.user.email,
+            password:this.props.user.password,
+            bio:this.props.user.bio,
             errors:{
                 username:"",
                 email:"",
@@ -20,6 +20,25 @@ class Settings extends React.Component {
             }
         }
     }
+    /* componentDidMount(){
+        fetch(url.userVerifyURL,{
+            method: 'GET',
+            headers:{
+                'Content-Type': 'application/json',
+                authorization: `Token ${this.props.user.token}`
+            },
+        })
+        .then(res => res.json())
+        .then(({user}) => {
+            this.setState({
+                email:user.email,
+                username:user.username,
+                bio:user.bio,
+                password:user.password,
+            })
+        })
+        
+    } */
     validateImageurl = (value) => {
         let re = /([a-z\-_0-9\/\:\.]*\.(jpg|jpeg|png|gif))/;
         return re.test(value);
@@ -58,7 +77,7 @@ class Settings extends React.Component {
         event.preventDefault();
         let {imageUrl,username,email,password,bio} = this.state;
         // alert(title + description + body + tags)
-        /* fetch(url.userVerifyURL,{
+        fetch(url.userVerifyURL,{
             method: 'PUT',
             headers:{
                 'Content-Type': 'application/json',
@@ -77,7 +96,7 @@ class Settings extends React.Component {
             if(!res.ok){
                 return res.json().then(({errors}) => {
                     // console.log(data);
-                    return Promise.reject("Check your fetch url, user not updated !!!")
+                    return Promise.reject(errors)
                 })
             }else{
                 return res.json()
@@ -85,38 +104,41 @@ class Settings extends React.Component {
         })
         .then(({user}) => {
             // console.log(user);
-            // this.props.updateUser(user);
-            // this.props.history.push('/');
+            this.props.history.push('/');
+            this.props.updateUser({
+                ...user,
+                password,
+            });
+            
         })
-        .catch(message => {
+        .catch((errors) => {
             // console.log(errors);
             this.setState((prev) => {
                 return {
-                    
-                    errors:{
-                        ...prev.errors,
-                        message,
-                    }
+                    errors,
                 }
             })
-        }) */
+        })
     }
+    
     render(){
+        // console.log(this.props.user);
         let {imageUrl,username,email,password,bio,errors} = this.state;
         return (
             <section className='main-signin newpost flex-center-center' >
                 <h2>Settings</h2>
+                <h3  className='button-shrink' style={{padding: "4px"}} ><NavLink to='/'  style={{textDecoration:"none"}} onClick={() =>this.props.handleLogout("logout")} >Logout</NavLink></h3>
                 <form onSubmit={this.handleInputSubmit} className='flex-center-center'>
                     <input type='text' className='email' value={imageUrl} onChange={this.handleInputChange} name="imageUrl" placeholder='Url of profile picture'/>
                     <div className='errs'>{errors.imageUrl}</div>
-                    <input type='text'  className='password' value={username}  onChange={this.handleInputChange} name="username" placeholder={`Username`}/>
+                    <input type='text'  className='password' value={username}  onChange={this.handleInputChange} name="username" placeholder={`Username (mandatory field)`}/>
                     <div className='errs'>{errors.username}</div>
                     <textarea rows={10} className='email' value={bio} onChange={this.handleInputChange} name='bio' placeholder='Your bio...' ></textarea>
-                    <input type='text'  className='password' value={email}  onChange={this.handleInputChange} name="email" placeholder="Email" />
+                    <input type='text'  className='password' value={email}  onChange={this.handleInputChange} name="email" placeholder="Email (mandatory field)" />
                     <div className='errs'>{errors.email}</div>
-                    <input type='password'  className='password' value={password}  onChange={this.handleInputChange} name="password" placeholder="New password" />
+                    <input type='password'  className='password' value={password}  onChange={this.handleInputChange} name="password" placeholder="New password (mandatory field)" />
                     <div className='errs'>{errors.password}</div>
-                    <input type='submit'  className='button-swing submit-btn'  value='Update Settings' />
+                    <input type='submit'  disabled={!username || !email || !password} className='button-swing submit-btn'  value='Update Settings' />
                 </form>
             </section>
         )

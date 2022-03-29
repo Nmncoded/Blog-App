@@ -45,11 +45,11 @@ class SingleArticle extends React.Component {
                 <article className='single-article-hero'>
                     <section className='single-article container'>
                         <h1>{article.title}</h1>
-                        <div className='person'>
+                        <div className='person apdding'>
                             <img src={article.author.image} alt={article.author.username}/>
                             <div className='name-date'>
                                 <NavLink to='/' className='name'>{article.author.username}</NavLink>
-                                <time dateTime='' className='date'>{(article.updatedAt.split("T"))[0]}</time>
+                                <time dateTime='' className='date clr-white'>{(article.updatedAt.split("T"))[0]}</time>
                             </div>
                         </div>
                     </section>

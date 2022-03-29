@@ -66,7 +66,10 @@ class Signin extends React.Component {
             }
         })
         .then(({user}) => {
-            this.props.updateUser(user);
+            this.props.updateUser({
+                ...user,
+                password,
+            });
             this.props.history.push('/');
         })
         .catch(errors => {
