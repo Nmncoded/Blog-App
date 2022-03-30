@@ -134,6 +134,12 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+@media screen and (max-width: 768px) {
+  .profile-hero-section {
+    margin-top: 56px !important;
+  }
+}
+
 .profile-hero {
   display: -webkit-box;
   display: -ms-flexbox;

@@ -73,6 +73,9 @@
 /* custom styles */
 
 .main-signup {
+  @media screen and (max-width:768px){
+    margin-top: 56px !important;
+  }
   margin: 24px;
   flex-direction: column;
   h2 {

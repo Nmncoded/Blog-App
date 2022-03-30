@@ -161,17 +161,19 @@
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 0;
+    // left: 0;
     right: 0;
-    height: 92vh;
+    height: 50vh;
+    width: 50vw;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 99;
     background-color: lightblue;
     margin-top: 66px;
     .nav-links {
-      font-size: 32px;
+      font-size: 28px;
       &:hover {
         border: 2px solid rgba(black,0.4);
         padding: 8px 16px;

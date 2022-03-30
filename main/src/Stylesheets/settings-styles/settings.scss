@@ -73,6 +73,9 @@
 /* custom styles */
 
 .newpost {
+  @media screen and (max-width:768px){
+    margin-top: 56px !important;
+  }
   form {
     flex-direction: column;
     width: 60% !important;

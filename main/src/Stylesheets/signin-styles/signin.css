@@ -138,6 +138,12 @@
           flex-direction: column;
 }
 
+@media screen and (max-width: 768px) {
+  .main-signin {
+    margin-top: 56px !important;
+  }
+}
+
 .main-signin h2 {
   font-size: 48px;
   color: rgba(0, 0, 0, 0.7);

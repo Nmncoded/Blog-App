@@ -226,9 +226,9 @@
     position: fixed;
     top: 0;
     bottom: 0;
-    left: 0;
     right: 0;
-    height: 92vh;
+    height: 50vh;
+    width: 50vw;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -242,11 +242,12 @@
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
+    z-index: 99;
     background-color: lightblue;
     margin-top: 66px;
   }
   #toggle:checked ~ .nav-menu .nav-links {
-    font-size: 32px;
+    font-size: 28px;
     margin-bottom: 36px;
     color: #5cb85c;
   }

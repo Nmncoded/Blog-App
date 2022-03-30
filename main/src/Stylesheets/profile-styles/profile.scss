@@ -73,6 +73,9 @@
   /* custom styles */
 
 .profile-hero-section {
+  @media screen and (max-width:768px){
+    margin-top: 56px !important;
+  }
   background-color: rgba(black,0.1  );
 }
 .profile-hero {

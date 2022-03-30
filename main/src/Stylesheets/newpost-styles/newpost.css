@@ -130,6 +130,12 @@
 }
 
 /* custom styles */
+@media screen and (max-width: 768px) {
+  .newpost {
+    margin-top: 56px !important;
+  }
+}
+
 .newpost form {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
