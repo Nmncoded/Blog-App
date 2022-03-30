@@ -74,6 +74,11 @@
 /* custom styles */
 
 .main-hero {
+  @media screen and (max-width:768px){
+    // .margin-top {
+      margin-top: 56px !important;
+    // }
+  }
     background-color: rgba(#5cb85c,1);
     padding: 24px;
     margin-bottom: 24px;

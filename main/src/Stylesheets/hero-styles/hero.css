@@ -138,6 +138,12 @@
           box-shadow: inset 0 0 16px 8px rgba(0, 0, 0, 0.1);
 }
 
+@media screen and (max-width: 768px) {
+  .main-hero {
+    margin-top: 56px !important;
+  }
+}
+
 .hero {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;

@@ -15,11 +15,23 @@ class Header extends React.Component {
                 <div>
                     <NavLink to='/'  className='logo' >Conduit</NavLink>
                 </div>
+                
+                <label htmlFor='toggle' id='bars' >
+                <div className="hamburger-menu">
+                    <div className="bar top"></div>
+                    <div className="bar middle"></div>
+                    <div className="bar bottom"></div>
+                </div>
+                </label>
+                <input type='checkbox' id='toggle' />
                 {
                     isLoggedin ?
-                    <AuthorisedUser isLoggedin={isLoggedin} /> : 
+                    <AuthorisedUser isLoggedin={isLoggedin} />
+                    
+                    : 
                     <NoAuthorisedUser />
                 }
+
                 </section>
             </header>
         )
@@ -28,7 +40,7 @@ class Header extends React.Component {
 
 function AuthorisedUser(props){
     return(
-        <div >
+        <div className='nav-menu' >
             <NavLink activeClassName='nav-active' className='nav-links' to='/' exact >Home</NavLink>
             <NavLink  activeClassName='nav-active'  className='nav-links' to='/newpost' >New Article</NavLink>
             <NavLink  activeClassName='nav-active'  className='nav-links' to='/settings' >Settings</NavLink>
@@ -38,7 +50,7 @@ function AuthorisedUser(props){
 }
 function NoAuthorisedUser(props){
     return(
-        <div >
+        <div className='nav-menu'  >
             <NavLink activeClassName='nav-active' className='nav-links' to='/' exact >Home</NavLink>
             <NavLink  activeClassName='nav-active'  className='nav-links' to='/signup' >Sign up</NavLink>
             <NavLink  activeClassName='nav-active'  className='nav-links' to='/signin' >Sign In</NavLink>

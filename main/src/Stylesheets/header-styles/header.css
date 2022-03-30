@@ -129,9 +129,61 @@
       flex-wrap: wrap;
 }
 
+.hamburger-menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column wrap;
+          flex-flow: column wrap;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  height: 2.5rem;
+  width: 2.5rem;
+  cursor: pointer;
+}
+
+.hamburger-menu .bar {
+  height: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  margin: 3px 0px;
+  -webkit-transform-origin: left;
+          transform-origin: left;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+.hamburger-menu:hover .top {
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+.hamburger-menu:hover .middle {
+  opacity: 0;
+}
+
+.hamburger-menu:hover .bottom {
+  -webkit-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+}
+
 /* custom styles */
 .header {
   padding: 16px 36px;
+}
+
+@media screen and (max-width: 768px) {
+  .header {
+    height: 36px;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
 }
 
 .logo {
@@ -139,6 +191,7 @@
   font-size: 32px;
   font-weight: 650;
   text-decoration: none;
+  z-index: 1;
 }
 
 .nav-links {
@@ -153,5 +206,59 @@
 
 .nav-active {
   color: rgba(0, 0, 0, 0.8);
+}
+
+/* toggle-bars */
+#toggle, #bars {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  #bars {
+    display: inline-block;
+    z-index: 1;
+  }
+  .nav-menu {
+    display: none;
+  }
+  #toggle:checked ~ .nav-menu {
+    display: inline-block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 92vh;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    background-color: lightblue;
+    margin-top: 66px;
+  }
+  #toggle:checked ~ .nav-menu .nav-links {
+    font-size: 32px;
+    margin-bottom: 36px;
+    color: #5cb85c;
+  }
+  #toggle:checked ~ .nav-menu .nav-links:hover {
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: blue;
+    -webkit-transform: scale(0.6);
+            transform: scale(0.6);
+    -webkit-text-decoration: underline 2px solid #5cb85c;
+            text-decoration: underline 2px solid #5cb85c;
+  }
 }
 /*# sourceMappingURL=header.css.map */
