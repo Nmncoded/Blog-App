@@ -23,6 +23,7 @@ class App extends React.Component {
             user:null,
             isLoggedin:false,
             isVerifying : true,
+            // isFollowed:false,
         };
     }
     
@@ -73,7 +74,7 @@ class App extends React.Component {
                 <Header isLoggedin={this.state.isLoggedin} user={this.state.user} />
                 {
                     this.state.isLoggedin ?
-                    <AuthenticatedApp user={this.state.user} handleLogout={this.handleLogout} updateUser={this.updateUser} /> : 
+                    <AuthenticatedApp  user={this.state.user} handleLogout={this.handleLogout} updateUser={this.updateUser} /> : 
                     <UnAuthenticatedApp user={this.state.user} updateUser={this.updateUser}/>
                 }
             </BrowserRouter>
@@ -100,7 +101,7 @@ function AuthenticatedApp(props){
                 <Settings  user={props.user} handleLogout={props.handleLogout} />
             </Route>
             <Route path='/articles/:slug' >
-                <SingleArticle user={props.user} />
+                <SingleArticle user={props.user}  />
             </Route>
             <Route path='*' >
                 <ErrorPage />

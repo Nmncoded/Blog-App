@@ -96,7 +96,7 @@ class Signup extends React.Component {
                     <div className='errs'>{errors.email}</div>
                     <input type='password'  className='password' value={password}  onChange={this.handleInputChange} name="password" placeholder='Password'/>
                     <div className='errs'>{errors.password}</div>
-                    <input type='submit' className='button-swing submit-btn'disabled={errors.email || errors.password || errors.username || !email || !password || !username} onClick={this.handleInputSubmit} value='Sign up' />
+                    <input type='submit' className='button-swing submit-btn'disabled={errors.email || errors.password || errors.username || !email || !password || !username} onChange={this.handleInputSubmit} value='Sign up' />
                 </form>
             </section>
         )
