@@ -3,6 +3,7 @@ import url from './URL';
 import '../Stylesheets/single-styles/singlestyle.css';
 import {Link,NavLink,withRouter} from 'react-router-dom';
 import Loader from './loader';
+import UserContext from './userContext';
 
 class SingleArticle extends React.Component {
     constructor(props){
@@ -194,7 +195,13 @@ class SingleArticle extends React.Component {
         }
         
     }
+    
+    /* context api */
+    static contextType = UserContext;
+    /* context api */
+
     render(){
+        // console.log(this.context);
         let {article,comments,isFollowed} = this.state;
         if(!article){
             return <Loader />
@@ -229,7 +236,7 @@ class SingleArticle extends React.Component {
                         <div className='container' >
                             <section className='comments-section flex-center-center'>
                                 {
-                                    !this.props.user ? 
+                                    !this.context.isLoggedin ? 
                                     <h6>
                                     <NavLink className='nav-link' to='/signin' >Signin</NavLink>
                                     or 

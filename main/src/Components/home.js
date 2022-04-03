@@ -147,7 +147,7 @@ class Home extends React.Component {
     render(){
         const {articles,allTags,activeTag,articlePerPage} = this.state;
         const {articlErr,tagErr} = this.state;
-        console.log(articles);
+        // console.log(articles);
         return (
                 <>
                     <Hero />

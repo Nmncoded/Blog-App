@@ -13,7 +13,9 @@ import Loader from './Components/loader';
 import NewPost from './Components/newpost';
 import UpdatePost from './Components/updatepost';
 import Profile from './Components/profile'
-import Settings from   './Components/settings'
+import Settings from   './Components/settings';
+import ErrorBoundary from './Components/ErrorBoundary';
+import UserContext from './Components/userContext';
 
 
 class App extends React.Component {
@@ -60,16 +62,18 @@ class App extends React.Component {
         localStorage.setItem( url.localStorageKey, user.token);
     }
     handleLogout = () => {
-        console.log("logout")
+        // console.log("logout")
         localStorage.clear();
         this.setState({isLoggedin:false})
     }
     render(){
+        let {user,isLoggedin}  = this.state;
         if(this.state.isVerifying){
             return <Loader />
         }
-        console.log(this.state.user)
+        // console.log(this.state.user)
         return (
+            <UserContext.Provider value={{user,isLoggedin}} >
             <BrowserRouter>
                 <Header isLoggedin={this.state.isLoggedin} user={this.state.user} />
                 {
@@ -78,6 +82,7 @@ class App extends React.Component {
                     <UnAuthenticatedApp user={this.state.user} updateUser={this.updateUser}/>
                 }
             </BrowserRouter>
+            </UserContext.Provider>
         )
     }
 }
@@ -122,7 +127,7 @@ function UnAuthenticatedApp(props){
                 <Signin updateUser={props.updateUser}  />
             </Route>
             <Route path='/articles/:slug' >
-                <SingleArticle user={props.user} />
+                <SingleArticle user={props.user } />
             </Route>
             <Route path='*' >
                 <ErrorPage />
@@ -130,4 +135,8 @@ function UnAuthenticatedApp(props){
         </Switch>
     )
 }
-ReactDOM.render(<App />, document.getElementById(`root`));
+ReactDOM.render(
+<ErrorBoundary>
+<App />
+</ErrorBoundary>
+, document.getElementById(`root`));
