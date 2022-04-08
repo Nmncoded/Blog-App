@@ -1,10 +1,11 @@
-import React from 'react'; 
+import React,{useState,useEffect,useContext} from 'react'; 
 import url from './URL';
 import '../Stylesheets/single-styles/singlestyle.css';
 import {Link,NavLink,withRouter} from 'react-router-dom';
 import Loader from './loader';
 import UserContext from './userContext';
 
+/*
 class SingleArticle extends React.Component {
     constructor(props){
         super(props);
@@ -18,6 +19,7 @@ class SingleArticle extends React.Component {
             isFollowed:false,
         };
     }
+
     handleMoreComments = () => {
         this.setState((prev) => {
             return {
@@ -25,7 +27,8 @@ class SingleArticle extends React.Component {
             }
         })
     }
-    /* handleFollowClick = () => {
+
+    handleFollowClick = () => {
         // let {token,username} = this.props.user;
         // let isFollowed = this.state.isFollowed;
         this.setState((prev) => {
@@ -33,7 +36,8 @@ class SingleArticle extends React.Component {
                 isFollowed: !prev.isFollowed,
             }
         })
-    } */
+    }
+
     fetchFollowData = () => {
         let {token,username} = this.props.user;
         let isFollowed = this.state.isFollowed;
@@ -196,9 +200,9 @@ class SingleArticle extends React.Component {
         
     }
     
-    /* context api */
-    static contextType = UserContext;
-    /* context api */
+    
+    // static contextType = UserContext;
+    
 
     render(){
         // console.log(this.context);
@@ -284,7 +288,228 @@ class SingleArticle extends React.Component {
         )
     }
 }
+ */
 
+function SingleArticle(props) {
+    let [comments,setComments] = useState(null);
+    let [comment,setComment] = useState({});
+    let [article,setArticle] = useState(null);
+    let [articlErr,setArticlErr] = useState("");
+    let [textArea,setTextArea] = useState("");
+    let [moreComments,setMoreComments] = useState(false);
+    let [isFollowed,setIsFollowed] = useState(false);
+    let user = useContext(UserContext);
 
+    useEffect(() => {
+        let slug = props.match.params.slug;
+        fetch(url.baseUrl + "/" + slug)
+        .then(res => {
+            // console.log(res)
+            if(!res.ok){
+                throw new Error("check your Url")
+            }else{
+                return res.json()
+            }
+        })
+        .then(({article}) => {
+            setArticle(article)
+        })
+        .catch(error => {
+        })
+        fetchData(url.baseUrl + "/" + slug + "/comments",'GET');
+    },[comment.id])
+
+    
+    const fetchData = (url,request) => {
+        console.log("fetch-data");
+        let token = props.user.token;
+        fetch(url,{
+            method: request,
+            headers:{
+                'Content-Type': 'application/json',
+                authorization: `Token ${token}`
+            },
+        })
+        .then(res => {
+            console.log(res)
+            if(!res.ok){
+                throw new Error("check your Url")
+            }else{
+                // console.log(res); 
+                return res.json()
+            }
+        })
+        .then(({comments}) => {
+            console.log(comments)
+            setComments(comments);
+        })
+        .catch(err => {
+            console.log(err)
+            // setArticlErr(err)
+        })
+    }
+
+    const handleMoreComments = () => {
+        setMoreComments(!moreComments);
+    }
+
+    const handleFollowClick = () => {
+        setIsFollowed(!isFollowed)
+    }
+
+    const fetchFollowData = () => {
+        let {token,username} = props.user;
+        fetch(url.profileUrl  + `/${username}/follow`,{
+            method: isFollowed ? 'DELETE' : 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                authorization: `Token ${token}`
+            },
+
+        })
+        .then(res => {
+            // console.log(res)
+            if(!res.ok){
+                throw new Error("check your Url")
+            }else{
+                return res.json()
+            }
+        })
+        .then(({profile}) => {
+            setIsFollowed(isFollowed =  profile.following)
+        })
+        .catch(err => {
+            
+            // console.log(err);
+            
+            setArticlErr(articlErr = err)
+        })
+    }
+
+    const handleDeleteComment = (id) => {
+        console.log(id)
+        let slug = props.match.params.slug;
+        fetchData(url.baseUrl + "/" + slug + `/comments/${id}`,'DELETE');
+        setComments(comments = comments.filter(c => c.id !== id))
+    }
+
+    const handleChange = ({target}) => {
+        let {name,value} = target;
+        setTextArea(name = value);
+    }
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        let slug = props.match.params.slug;
+        let token = props.user.token;
+        fetch(url.baseUrl + "/" + slug + "/comments",{
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+                authorization: `Token ${token}`
+            },
+            body: JSON.stringify({
+                comment:{
+                    body: textArea,
+                }
+            })
+        })
+        .then(res => {
+            // console.log(res)
+            if(!res.ok){
+                throw new Error("check your Url")
+            }else{
+                return res.json()
+            }
+        })
+        .then(({comment}) => {
+            // console.log(comment);
+            setComment(comment);
+            setTextArea(textArea = "");
+            setComments(comments = null)
+        })
+    }
+
+        if(!article){
+            return <Loader />
+        }
+        return (
+            <>
+                <article className='single-article-hero'>
+                    <section className='single-article container'>
+                        <h1>{article.title}</h1>
+                        <div className='person apdding'>
+                            <img src={article.author.image} alt={article.author.username}/>
+                            <div className='name-date'>
+                                <NavLink to='/' className='name'>{article.author.username}</NavLink>
+                                <time dateTime='' className='date clr-white'>{(article.updatedAt.split("T"))[0]}</time>
+                            </div>
+                            <button onClick={fetchFollowData} className='button-swing follow-btn' >{isFollowed ? '-Unfollow' : '+Follow'}</button>
+                        </div>
+                    </section>
+                </article>
+                <section className='main-single-article'>
+                    <article className='container'>
+                        <p>{article.body}</p>
+                        <div className='taglist'>
+                            {
+                                article.tagList.map((p,index) => {
+                                    return (
+                                        <span key={index}  to={`/articles/${article.slug}`} className='div' >{p}</span>
+                                    )
+                                })
+                            }
+                        </div>
+                        <div className='container' >
+                            <section className='comments-section flex-center-center'>
+                                {
+                                    !user.isLoggedin ? 
+                                    <h6>
+                                    <NavLink className='nav-link' to='/signin' >Signin</NavLink>
+                                    or 
+                                    <NavLink className='nav-link' to='/signup'  >Signup</NavLink>
+                                    to add comments on this article.
+                                    </h6> : 
+                                    <>
+                                    
+                                    
+                                <form className='form'>
+                                    <textarea  className='text-area' onChange={handleChange} name='textarea' value={textArea} rows='2' placeholder='write comments...' ></textarea>
+                                    <input type='submit' onClick={handleSubmit} value='Post' />
+                                </form>
+                                <ul className='comments-ul'>
+                                    {
+                                        !comments ? <Loader /> : 
+                                        comments.length === 0 ? <p className='err-msg' >Add comments !!!</p> : 
+                                        (moreComments ? comments : comments.slice(0,3)).map(cmnt => {
+                                            return(
+                                                <li key={cmnt.id} className='profile'>
+                                                    <p className='comments-text'>{cmnt.body}</p>
+                                                    <div className='margin-bottom person'>
+                                                        <img src={cmnt.author.image} alt={cmnt.author.username}/>
+                                                        <div className='name-date'>
+                                                            <NavLink to='/' className='name'>{cmnt.author.username}</NavLink>
+                                                            <time dateTime='' className='color date'>{(cmnt.createdAt.split("T"))[0]}</time>
+                                                        </div>
+                                                    </div>
+                                                    <button className='align-self button-swing' onClick={() => handleDeleteComment(cmnt.id)} >Delete</button>
+                                                </li>
+                                            )
+                                        })
+                                    }
+                                </ul>
+                                {
+                                    !comments ? "" : 
+                                <button className={comments.length === 0  ? 'display-none' : 'button-shrink a-padding'}  onClick={handleMoreComments} >{!moreComments ? "More comments" : "less comments"}</button>
+                                }
+                                </>
+                                }
+                            </section>
+                        </div>
+                    </article>
+                </section>
+            </>
+        )
+    }
+// }
 
 export default withRouter(SingleArticle);
