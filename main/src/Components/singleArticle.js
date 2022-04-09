@@ -299,7 +299,7 @@ function SingleArticle(props) {
     let [moreComments,setMoreComments] = useState(false);
     let [isFollowed,setIsFollowed] = useState(false);
     let user = useContext(UserContext);
-
+    // console.log(user)
     useEffect(() => {
         let slug = props.match.params.slug;
         fetch(url.baseUrl + "/" + slug)
@@ -316,11 +316,14 @@ function SingleArticle(props) {
         })
         .catch(error => {
         })
-        fetchData(url.baseUrl + "/" + slug + "/comments",'GET');
+        if(user.isLoggedin){
+            fetchData(url.baseUrl + "/" + slug + "/comments",'GET');
+        }
     },[comment.id])
 
     
     const fetchData = (url,request) => {
+        console.log(props);
         console.log("fetch-data");
         let token = props.user.token;
         fetch(url,{

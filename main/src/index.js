@@ -1,24 +1,79 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import './Stylesheets/main-styles/main.css';
-import {BrowserRouter,Route,Switch} from 'react-router-dom';
+import {BrowserRouter} from 'react-router-dom';
 import Header from './Components/header.js';
-import Home from './Components/home.js';
-import Signup from './Components/signup'
-import Signin from './Components/signin'
-import ErrorPage from './Components/Errorpage';
-import SingleArticle from './Components/singleArticle';
 import url from './Components/URL';
 import Loader from './Components/loader';
-import NewPost from './Components/newpost';
-import UpdatePost from './Components/updatepost';
-import Profile from './Components/profile'
-import Settings from   './Components/settings';
 import ErrorBoundary from './Components/ErrorBoundary';
 import UserContext from './Components/userContext';
+import AuthenticatedApp from './Components/Authenticatedapp';
+import UnAuthenticatedApp from './Components/unauthenticatedapp';
 
+function App(props){
+    let [user,setUser] = useState(null);
+    let [isLoggedin,setIsLoggedIn] = useState(false);
+    let [isVerifying,setIsVerifying] = useState(true);
+    
+    useEffect(() => {
+        
+        let key = localStorage[url.localStorageKey];
+        let {userVerifyURL} = url;
+        if(key){
+            fetch(userVerifyURL,{
+                method: 'GET',
+                headers:{
+                    authorization : `Token ${key}`,
+                }
+            }).then(res => {
+                if(!res.ok){
+                    return res.json().then(({errors}) => {
+                        return Promise.reject(errors);
+                    });
+                }else{
+                    return res.json()
+                }
+            })
+            .then(({user}) => {
+                
+                updateUser(user);
+            })
+            .catch(errors => console.log(errors))
+        }else {
+            setIsVerifying(isVerifying = false);
+        }
+    },[])
+    const updateUser = (user) => {
+        // this.setState({isLoggedin:true,user,isVerifying:false});
+        setIsLoggedIn(isLoggedin = true);
+        setUser(user);
+        setIsVerifying(isVerifying = false);
+        localStorage.setItem( url.localStorageKey, user.token);
+    }
+    const handleLogout = () => {
+        // console.log("logout")
+        localStorage.clear();
+        setIsLoggedIn(isLoggedin = false)
+        // this.setState({isLoggedin:false})
+    }
+        if(isVerifying){
+            return <Loader />
+        }
+        return (
+            <UserContext.Provider value={{user,isLoggedin}} >
+            <BrowserRouter>
+                <Header isLoggedin={isLoggedin} user={user} />
+                {
+                    isLoggedin ?
+                    <AuthenticatedApp  user={user} handleLogout={handleLogout} updateUser={updateUser} /> : 
+                    <UnAuthenticatedApp user={user} updateUser={updateUser}/>
+                }
+            </BrowserRouter>
+            </UserContext.Provider>
+        )
+}
 
-class App extends React.Component {
+/* class App extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -85,58 +140,14 @@ class App extends React.Component {
             </UserContext.Provider>
         )
     }
-}
+} */
 
-function AuthenticatedApp(props){
-    return(
-        <Switch>
-            <Route path='/' exact >
-                <Home />
-            </Route>
-            <Route path='/newpost'  exact >
-                <NewPost user={props.user} />
-            </Route>
-            <Route path='/updatepost/:slug'  exact >
-                <UpdatePost user={props.user} />
-            </Route>
-            <Route path='/profile' exact >
-                <Profile  user={props.user}  />
-            </Route>
-            <Route path='/settings'   updateUser={props.updateUser}   exact >
-                <Settings  user={props.user} handleLogout={props.handleLogout} />
-            </Route>
-            <Route path='/articles/:slug' >
-                <SingleArticle user={props.user}  />
-            </Route>
-            <Route path='*' >
-                <ErrorPage />
-            </Route>
-        </Switch>
-    )
-}
-function UnAuthenticatedApp(props){
-    return (
-        <Switch>
-            <Route path='/' exact >
-                <Home />
-            </Route>
-            <Route path='/signup'exact >
-                <Signup  updateUser={props.updateUser}   />
-            </Route>
-            <Route path='/signin'  exact >
-                <Signin updateUser={props.updateUser}  />
-            </Route>
-            <Route path='/articles/:slug' >
-                <SingleArticle user={props.user } />
-            </Route>
-            <Route path='*' >
-                <ErrorPage />
-            </Route>
-        </Switch>
-    )
-}
+
+
+
 ReactDOM.render(
 <ErrorBoundary>
 <App />
 </ErrorBoundary>
-, document.getElementById(`root`));
+, document.getElementById(`root`)
+);

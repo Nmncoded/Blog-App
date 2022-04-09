@@ -1,14 +1,9 @@
 import React from 'react'; 
 import '../Stylesheets/header-styles/header.css';
-import {Link,NavLink} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 
-class Header extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {};
-    }
-    render(){
-        let {isLoggedin,user} = this.props;
+function Header(props) {
+        let {isLoggedin} = props;
         return (
             <header className='container'>
                 <section className='header flex-between-center' >
@@ -35,7 +30,6 @@ class Header extends React.Component {
                 </section>
             </header>
         )
-    }
 }
 
 function AuthorisedUser(props){

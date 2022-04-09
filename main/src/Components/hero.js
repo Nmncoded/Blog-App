@@ -1,13 +1,7 @@
 import React from 'react'; 
 import '../Stylesheets/hero-styles/hero.css';
-import {Link,NavLink} from 'react-router-dom';
 
-class Hero extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {};
-    }
-    render(){
+function Hero() {
         return (
             <article className='main-hero'>
                 <section className='hero container flex-center-center'>
@@ -16,7 +10,6 @@ class Hero extends React.Component {
                 </section>
             </article>
         )
-    }
 }
 
 export default Hero;
