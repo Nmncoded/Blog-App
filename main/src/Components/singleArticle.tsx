@@ -4,7 +4,7 @@ import '../Stylesheets/single-styles/singlestyle.css';
 import {Link,NavLink,RouteComponentProps,withRouter} from 'react-router-dom';
 import Loader from './loader';
 import UserContext from './userContext';
-import { similarProps } from './typesDefined';
+import { similarProps, userContextType } from './typesDefined';
 import { stringify } from 'querystring';
 
 type comProps = RouteComponentProps & similarProps | any
@@ -17,7 +17,8 @@ function SingleArticle(props:comProps):JSX.Element {
     let [textArea,setTextArea] = useState("");
     let [moreComments,setMoreComments] = useState(false);
     let [isFollowed,setIsFollowed] = useState(false);
-    let user = useContext(UserContext);
+    let user = useContext(UserContext) as userContextType ;
+
     useEffect(() => {
         let slug = props.match.params.slug;
         fetch(url.baseUrl + "/" + slug)
@@ -33,7 +34,7 @@ function SingleArticle(props:comProps):JSX.Element {
         })
         .catch(error => {
         })
-        if(user.isLoggedin){
+        if(user?.isLoggedin){
             fetchData(url.baseUrl + "/" + slug + "/comments",'GET');
         }
     },[comment?.id])

@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom';
 import Header from './Components/header';
 import url from './Components/URL';
 import Loader from './Components/loader';
-// import ErrorBoundary from './Components/ErrorBoundary';
 import UserContext from './Components/userContext';
 import AuthenticatedApp from './Components/Authenticatedapp';
 import UnAuthenticatedApp from './Components/unauthenticatedapp';
@@ -86,9 +85,7 @@ function App(): JSX.Element {
 
 
 ReactDOM.render(
-    // {/* <ErrorBoundary> */}
     <App />
-    // </ErrorBoundary>
     , document.getElementById(`root`)
 );
 

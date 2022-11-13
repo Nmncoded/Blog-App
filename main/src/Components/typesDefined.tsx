@@ -70,3 +70,8 @@ export interface articlesProps {
     articles :  any,
     update? : boolean | string
 }
+
+export type userContextType = {
+    user : userP,
+    isLoggedin : boolean
+  };
